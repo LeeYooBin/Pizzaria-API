@@ -1,0 +1,556 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Pizzaria",
+    "description": "CRUD básico de uma pizzaria",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "localhost"
+    }
+  ],
+  "paths": {
+    "/customer/findAll": {
+      "get": {
+        "summary": "Lista todos os clientes cadastrados",
+        "description": "Rota responsável por carregar todos os clientes cadastrados na API",
+        "tags": ["Customer"],
+        "responses": {
+          "200": {
+            "description": "Lista de clientes recuperada com sucesso."
+          },
+          "500": {
+            "description": "Erro ao recuperar clientes."
+          }
+        }
+      }
+    },
+    "/customer/find/{id}": {
+      "get": {
+        "summary": "Recupera um cliente pelo ID",
+        "description": "Rota responsável por recuperar um cliente específico com base no ID fornecido.",
+        "tags": ["Customer"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente recuperado com sucesso."
+          },
+          "400": {
+            "description": "ID de cliente inválido."
+          },
+          "404": {
+            "description": "Cliente não encontrado."
+          },
+          "500": {
+            "description": "Erro ao recuperar cliente."
+          }
+        }
+      }
+    },
+    "/customer/create": {
+      "post": {
+        "summary": "Cria um novo cliente",
+        "description": "Rota responsável por criar um novo cliente.",
+        "tags": ["Customer"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Cliente criado com sucesso."
+          },
+          "400": {
+            "description": "Todos os campos precisam ser preenchidos."
+          },
+          "409": {
+            "description": "O email já está em uso."
+          },
+          "500": {
+            "description": "Erro ao criar cliente."
+          }
+        }
+      }
+    },
+    "/customer/login": {
+      "post": {
+        "summary": "Realiza login",
+        "description": "Rota responsável por realizar o login de um cliente.",
+        "tags": ["Customer"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "customer": {
+                      "type": "object"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email ou senha inválida."
+          },
+          "500": {
+            "description": "Não foi possível realizar o login."
+          }
+        }
+      }
+    },
+    "/customer/update/{id}": {
+      "put": {
+        "summary": "Atualiza um cliente pelo ID",
+        "description": "Rota responsável por atualizar um cliente específico com base no ID fornecido.",
+        "tags": ["Customer"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente atualizado com sucesso."
+          },
+          "400": {
+            "description": "ID de cliente inválido ou todos os campos precisam ser preenchidos."
+          },
+          "404": {
+            "description": "Cliente não encontrado."
+          },
+          "409": {
+            "description": "O email já está em uso por outro cliente."
+          },
+          "500": {
+            "description": "Erro ao atualizar cliente."
+          }
+        }
+      }
+    },
+    "/customer/delete/{id}": {
+      "delete": {
+        "summary": "Exclui um cliente pelo ID",
+        "description": "Rota responsável por excluir um cliente específico com base no ID fornecido.",
+        "tags": ["Customer"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Cliente excluído com sucesso."
+          },
+          "400": {
+            "description": "ID de cliente inválido."
+          },
+          "500": {
+            "description": "Erro ao excluir cliente."
+          }
+        }
+      }
+    },
+    "/flavor/findAll": {
+      "get": {
+        "summary": "Lista todos os sabores cadastrados",
+        "description": "Rota responsável por carregar todos os sabores cadastrados na API",
+        "tags": ["Flavor"],
+        "responses": {
+          "200": {
+            "description": "Lista de sabores recuperada com sucesso."
+          },
+          "500": {
+            "description": "Erro ao recuperar sabores."
+          }
+        }
+      }
+    },
+    "/flavor/find": {
+      "get": {
+        "summary": "Recupera um sabor pelo nome",
+        "description": "Rota responsável por recuperar um sabor específico com base no nome fornecido.",
+        "tags": ["Flavor"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sabor recuperado com sucesso."
+          },
+          "404": {
+            "description": "Sabor não encontrado."
+          },
+          "500": {
+            "description": "Erro ao recuperar sabor."
+          }
+        }
+      }
+    },
+    "/flavor/create": {
+      "post": {
+        "summary": "Cria um novo sabor",
+        "description": "Rota responsável por criar um novo sabor.",
+        "tags": ["Flavor"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "ingredients": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "ingredients"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sabor criado com sucesso."
+          },
+          "400": {
+            "description": "Todos os campos precisam ser preenchidos."
+          },
+          "409": {
+            "description": "Sabor já cadastrado."
+          },
+          "500": {
+            "description": "Erro ao criar sabor."
+          }
+        }
+      }
+    },
+    "/flavor/update/{id}": {
+      "put": {
+        "summary": "Atualiza um sabor pelo ID",
+        "description": "Rota responsável por atualizar um sabor específico com base no ID fornecido.",
+        "tags": ["Flavor"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "ingredients": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "ingredients"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sabor atualizado com sucesso."
+          },
+          "400": {
+            "description": "ID de sabor inválido ou todos os campos precisam ser preenchidos."
+          },
+          "404": {
+            "description": "Sabor não encontrado."
+          },
+          "409": {
+            "description": "Sabor já cadastrado."
+          },
+          "500": {
+            "description": "Erro ao atualizar sabor."
+          }
+        }
+      }
+    },
+    "/flavor/delete/{id}": {
+      "delete": {
+        "summary": "Exclui um sabor pelo ID",
+        "description": "Rota responsável por excluir um sabor específico com base no ID fornecido.",
+        "tags": ["Flavor"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Sabor excluído com sucesso."
+          },
+          "400": {
+            "description": "ID de sabor inválido."
+          },
+          "404": {
+            "description": "Sabor não encontrado."
+          },
+          "500": {
+            "description": "Erro ao excluir sabor."
+          }
+        }
+      }
+    },
+    "/order/find/{id}": {
+      "get": {
+        "summary": "Recupera um pedido pelo ID",
+        "description": "Rota responsável por recuperar um pedido específico com base no ID fornecido.",
+        "tags": ["Order"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pedido recuperado com sucesso."
+          },
+          "400": {
+            "description": "ID de pedido inválido."
+          },
+          "404": {
+            "description": "Pedido não encontrado."
+          },
+          "500": {
+            "description": "Erro ao recuperar pedido."
+          }
+        }
+      }
+    },
+    "/order/findAll": {
+      "get": {
+        "summary": "Lista todos os pedidos cadastrados",
+        "description": "Rota responsável por carregar todos os pedidos cadastrados na API",
+        "tags": ["Order"],
+        "responses": {
+          "200": {
+            "description": "Lista de pedidos recuperada com sucesso."
+          },
+          "500": {
+            "description": "Erro ao recuperar pedidos."
+          }
+        }
+      }
+    },
+    "/order/create": {
+      "post": {
+        "summary": "Cria um novo pedido",
+        "description": "Rota responsável por criar um novo pedido.",
+        "tags": ["Order"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "customerId": {
+                    "type": "string"
+                  },
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "pizza": {
+                          "type": "object",
+                          "properties": {
+                            "flavor": {
+                              "type": "string"
+                            },
+                            "size": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["flavor", "size"]
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": ["pizza", "quantity"]
+                    }
+                  }
+                },
+                "required": ["customerId", "products"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pedido criado com sucesso."
+          },
+          "400": {
+            "description": "Cliente não encontrado, pedido sem produtos ou produtos inválidos."
+          },
+          "404": {
+            "description": "Cliente não encontrado."
+          },
+          "500": {
+            "description": "Erro ao criar pedido."
+          }
+        }
+      }
+    },
+    "/order/updateStatus/{id}": {
+      "patch": {
+        "summary": "Atualiza o status de um pedido pelo ID",
+        "description": "Rota responsável por atualizar o status de um pedido específico com base no ID fornecido.",
+        "tags": ["Order"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newStatus": {
+                    "type": "string"
+                  }
+                },
+                "required": ["newStatus"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Status de pedido atualizado com sucesso."
+          },
+          "400": {
+            "description": "ID de pedido inválido ou status inválido."
+          },
+          "404": {
+            "description": "Pedido não encontrado."
+          },
+          "500": {
+            "description": "Erro ao atualizar status do pedido."
+          }
+        }
+      }
+    }
+  },
+  "apis": ["./src/routes/flavor.route.js", "./src/routes/customer.route.js", "./src/routes/order.route.js"]
+}
