@@ -10,8 +10,8 @@ router.get("/find/:id", authMiddleware, controller.findCustomerById);
 router.post("/create", controller.createCustomer);
 router.post("/login", controller.loginService);
 
-router.put("/update/:id", controller.updateCustomerById);
+router.put("/update/:id", authMiddleware, controller.updateCustomerById);
 
-router.delete("/delete/:id", controller.deleteCustomerById);
+router.delete("/delete/:id", authMiddleware, controller.deleteCustomerById);
 
 module.exports = router;
