@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const connection = () => {
-  mongoose.connect(`mongodb://127.0.0.1:27017/db-2`, {
+  mongoose.connect(`${process.env.DB_STRING}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }).then(() => console.log("MongoDB connected"))
