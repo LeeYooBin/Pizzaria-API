@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const customerSchema = new mongoose.Schema({
   name: {
@@ -32,6 +33,13 @@ const customerSchema = new mongoose.Schema({
     required: true,
     default: false
   }
+});
+
+customerSchema.pre("save", async function (next) {
+  if (this.password) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
 });
 
 const Customer = mongoose.model('customers', customerSchema);
