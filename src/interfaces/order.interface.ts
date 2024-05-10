@@ -1,9 +1,16 @@
 import { Document } from "mongoose";
+import { Item } from "./product.interface";
 
 export interface Order extends Document {
-  items: Record<string, number>;
+  items: Item[];
   total: number;
-  paymentType: string;
+  paymentType: Payment;
   comment?: string;
   date: Date;
+}
+
+export enum Payment {
+  "CREDIT_CARD",
+  "DEBIT_CARD",
+  "CASH"
 }

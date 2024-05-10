@@ -1,10 +1,11 @@
 import { Order } from "../interfaces/order.interface";
+import { Item } from "../interfaces/product.interface";
 import UserModel from "../models/user.model";
 
 export class OrderService {
   static createOrder = async (
     userId: string,
-    items: Record<string, number>,
+    items: Item[],
     total: number,
     paymentType: string,
     comment?: string
@@ -14,7 +15,7 @@ export class OrderService {
       items,
       total,
       paymentType,
-      ...(comment && { comment }),
+      comment,
       date: new Date(),
       } } 
     });

@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import { User } from "../interfaces/user.interface";
+import { Product } from "../interfaces/product.interface";
 import { Order } from "../interfaces/order.interface";
+import { Item } from "../interfaces/product.interface";
 import UserModel from "../models/user.model";
 
 export class UserService {
@@ -31,33 +33,37 @@ export class UserService {
     return await UserModel.findByIdAndDelete(id);
   };
 
-  static addToCart = async (userId: string, productId: string): Promise<void> => {
+  static addToCart = async (userId: string, product: Product): Promise<void> => {
     const user = await UserModel.findById(userId);
     if (user) {
-      if (user.cart[productId]) {
-        user.cart[productId] += 1;
-      } else {
-        user.cart[productId] = 1;
-      }
-      await user.save();
+        const existingItemIndex = user.cart.findIndex((cartItem) => cartItem._id === product._id);
+        if (existingItemIndex !== -1 && user.cart[existingItemIndex].quantity > 0) {
+            user.cart[existingItemIndex].quantity += 1;
+        } else {
+            const cartItem = { ...product, quantity: 1 } as Item;
+            user.cart.push(cartItem);
+        }
+        await user.save();
     }
   };
 
   static removeFromCart = async (userId: string, productId: string): Promise<void> => {
     const user = await UserModel.findById(userId);
-    if (user && user.cart[productId]) {
-      user.cart[productId] -= 1;
-      if (user.cart[productId] <= 0) {
-        delete user.cart[productId];
+    if (user) {
+      const existingItemIndex = user.cart.findIndex((cartItem) => cartItem._id === productId);
+      if (existingItemIndex !== -1 && user.cart[existingItemIndex].quantity > 0) {
+        user.cart[existingItemIndex].quantity -= 1;
       }
+      else user.cart = user.cart.filter((cartItem) => cartItem._id !== productId);
+      
       await user.save();
     }
   };
 
-  static cleanCart = async (userId: string): Promise<void> => {
+  static clearCart = async (userId: string): Promise<void> => {
     const user = await UserModel.findById(userId);
     if (user) {
-      user.cart = {};
+      user.cart = [];
       await user.save();
     }
   };
@@ -70,7 +76,7 @@ export class UserService {
     }
   };
 
-  static getCart = async (userId: string): Promise<Record<string, number> | null> => {
+  static getCart = async (userId: string): Promise<Item[] | null> => {
     const user = await UserModel.findById(userId);
     return user ? user.cart : null;
   };

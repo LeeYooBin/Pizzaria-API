@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
 import { OrderService } from "../services/order.service";
 import { User } from "../interfaces/user.interface";
+import { Payment } from "../interfaces/order.interface";
 import bcrypt from "bcrypt";
 import validator from "validator";
 
@@ -144,7 +145,7 @@ export class UserController {
 
   static addToCart = async (req: Request, res: Response): Promise<Response> => {
     const userId = req.params.id;
-    const { productId } = req.body;
+    const { product } = req.body;
 
     try {
       const user = await UserService.getUserByID(userId);
@@ -152,7 +153,7 @@ export class UserController {
         return res.status(404).json({ message: "User not found" });
       }
 
-      await UserService.addToCart(userId, productId);
+      await UserService.addToCart(userId, product);
 
       return res.status(200).json({ message: "Product added to cart successfully" });
     } catch (e) {
@@ -190,9 +191,21 @@ export class UserController {
         return res.status(404).json({ message: "User not found" });
       }
 
+      if (!total || !paymentType) {
+        return res.status(400).json({ message: "Total and payment type are required" });
+      }
+
+      if (typeof total !== "number" || total <= 0) {
+        return res.status(400).json({ message: "Total must be a positive number" });
+      }
+
+      if (!Object.values(Payment).includes(paymentType.toUpperCase())) {
+        return res.status(400).json({ message: "Invalid payment type" });
+      }
+
       const cart = await UserService.getCart(userId);
 
-      if (!cart || Object.keys(cart).length === 0) {
+      if (!cart || cart.length === 0) {
         return res.status(400).json({ message: "Cart is empty. Cannot create order without products." });
       }
 
@@ -200,8 +213,8 @@ export class UserController {
         userId,
         cart,
         total,
-        paymentType,
-        comment
+        paymentType.toUpperCase(),
+        comment || null
       );
 
       if (!order) {
@@ -209,7 +222,7 @@ export class UserController {
       }
 
       await UserService.addOrderToUser(userId, order);
-      await UserService.cleanCart(userId);
+      await UserService.clearCart(userId);
 
       return res.status(200).json({ message: "Order created successfully", order });
     } catch (e) {
@@ -217,7 +230,6 @@ export class UserController {
       return res.status(500).json({ message: "Error creating order" });
     }
   };
-
 
   static getOrders = async (req: Request, res: Response): Promise<Response> => {
     const userId = req.params.id;

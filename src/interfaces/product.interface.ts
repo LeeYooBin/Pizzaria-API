@@ -8,3 +8,7 @@ export interface Product extends Document {
   img: string;
   price: number;
 }
+
+export interface Item extends Product {
+  quantity: number;
+}
