@@ -1,0 +1,371 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pizzeria API",
+    "description": "Pizzeria API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Development Server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "List all users",
+        "description": "Route responsible for listing all users registered in the API.",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users obtained successfully."
+          },
+          "500": {
+            "description": "Error while retrieving list of users."
+          }
+        }
+      },
+      "post": {
+        "summary": "Register a new user",
+        "description": "Route responsible for registering a new user in the API.",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully."
+          },
+          "400": {
+            "description": "Required fields missing."
+          },
+          "500": {
+            "description": "Error while registering user."
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get a user",
+        "description": "Route responsible for retrieving a specific user based on the provided ID.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User retrieved successfully."
+          },
+          "400": {
+            "description": "Invalid user ID."
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "500": {
+            "description": "Error while retrieving user."
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a user",
+        "description": "Route responsible for updating a specific user based on the provided ID.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully."
+          },
+          "400": {
+            "description": "Invalid user ID or required fields missing."
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "409": {
+            "description": "Email already in use."
+          },
+          "500": {
+            "description": "Error while updating user."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a user",
+        "description": "Route responsible for deleting a specific user based on the provided ID.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully."
+          },
+          "400": {
+            "description": "Invalid user ID."
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "500": {
+            "description": "Error while deleting user."
+          }
+        }
+      }
+    },
+    "/users/cart/remove/{id}": {
+      "delete": {
+        "summary": "Remove a product from a user's cart.",
+        "description": "Route responsible for removing a product from a specific user's cart.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "User ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "productId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product removed from cart successfully."
+          },
+          "400": {
+            "description": "User or product ID is invalid or missing."
+          },
+          "404": {
+            "description": "User or product not found."
+          },
+          "500": {
+            "description": "Error while removing product from cart."
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Get all products",
+        "description": "Route responsible for retrieving all products from the API.",
+        "tags": [
+          "Product"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of products obtained successfully."
+          },
+          "500": {
+            "description": "Error while retrieving list of products."
+          }
+        }
+      },
+      "post": {
+        "summary": "Register a new product",
+        "description": "Route responsible for registering a new product in the API.",
+        "tags": [
+          "Product"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product registered successfully."
+          },
+          "400": {
+            "description": "Required fields missing."
+          },
+          "500": {
+            "description": "Error while registering product."
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Get a product",
+        "description": "Route responsible for retrieving a specific product based on the provided ID.",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product retrieved successfully."
+          },
+          "400": {
+            "description": "Invalid product ID."
+          },
+          "404": {
+            "description": "Product not found."
+          },
+          "500": {
+            "description": "Error while retrieving product."
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a product",
+        "description": "Route responsible for updating a specific product based on the provided ID.",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product updated successfully."
+          },
+          "400": {
+            "description": "Invalid product ID or required fields missing."
+          },
+          "404": {
+            "description": "Product not found."
+          },
+          "500": {
+            "description": "Error while updating product."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a product",
+        "description": "Route responsible for deleting a specific product based on the provided ID.",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product deleted successfully."
+          },
+          "400": {
+            "description": "Invalid product ID."
+          },
+          "404": {
+            "description": "Product not found."
+          },
+          "500": {
+            "description": "Error while deleting product."
+          }
+        }
+      }
+    }
+  }
+}
